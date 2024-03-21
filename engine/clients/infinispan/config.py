@@ -63,3 +63,6 @@ optional int32 id = 2;
 }
 """
 
+def infinispan_base_url(host: str) -> str:
+        return("%s://%s:%d/rest/v2"
+                       % (INFINISPAN_SCHEMA, host or INFINISPAN_HOST, INFINISPAN_PORT))

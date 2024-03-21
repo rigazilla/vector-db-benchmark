@@ -13,9 +13,11 @@ class InfinispanUploader(BaseUploader):
     conn = None
     cur = None
     upload_params = {}
+    host = None
 
     @classmethod
     def init_client(cls, host, distance, connection_params, upload_params):
+        cls.host = host
         return
 
     @classmethod
@@ -24,7 +26,7 @@ class InfinispanUploader(BaseUploader):
     ):
 
         # Copy is faster than insert
-        req_str_tpl = infinispan_base_url + "/caches/items/%d"
+        req_str_tpl = infinispan_base_url(cls.host) + "/caches/items/%d"
         for i, embedding in zip(ids, vectors):
             data = {"_type": "vectors", "vector": embedding, "id": i}
             data_str = json.dumps(data)

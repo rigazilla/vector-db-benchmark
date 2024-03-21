@@ -17,16 +17,21 @@ class InfinispanConfigurator(BaseConfigurator):
         super().__init__(host, collection_params, connection_params)
 
     def clean(self):
-        req_str = infinispan_base_url + "/caches/items"
+        print (self.host)
+        base_url = infinispan_base_url(self.host)
+        print (base_url)
+        req_str = base_url + "/caches/items"
+        base_url = infinispan_base_url(self.host)
         response = requests.delete(req_str, timeout=infinispan_timeout)
         assert response.ok or response.status_code == 404
-        req_str = infinispan_base_url + "/schemas/vector.proto"
+        req_str = base_url + "/schemas/vector.proto"
         response = requests.delete(req_str, timeout=infinispan_timeout)
         assert response.ok or response.status_code == 404
 
     def recreate(self, dataset: Dataset, collection_params):
         # TODO: raise IncompatibilityError for not implemented metrics
-        req_str = infinispan_base_url + "/schemas/vector.proto"
+        base_url = infinispan_base_url(self.host)
+        req_str = base_url + "/schemas/vector.proto"
         infinispan_schema_proto = (infinispan_schema_proto_tpl
                                    % (dataset.config.vector_size,
                                      self.DISTANCE_MAPPING[dataset.config.distance],
@@ -37,13 +42,13 @@ class InfinispanConfigurator(BaseConfigurator):
                                  timeout=infinispan_timeout,
                                  )
         assert response.ok
-        req_str = infinispan_base_url + "/caches/items"
+        req_str = base_url + "/caches/items"
         response = requests.post(req_str, infinispan_local_cache_config,
                                  headers={"Content-Type": "application/json"},
                                  timeout=infinispan_timeout,
                                  )
         assert response.ok
-        req_str = infinispan_base_url + "/caches/items/search/indexes?action=clear"
+        req_str = base_url + "/caches/items/search/indexes?action=clear"
         response = requests.post(req_str,
                                  headers={"Content-Type": "application/json"},
                                  timeout=infinispan_timeout,

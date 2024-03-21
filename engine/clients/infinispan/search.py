@@ -14,9 +14,11 @@ class InfinispanSearcher(BaseSearcher):
     distance = None
     search_params = {}
     parser = InfinispanConditionParser() # TODO: Implement metadata subfilters
+    host = None
 
     @classmethod
     def init_client(cls, host, distance, connection_params: dict, search_params: dict):
+        cls.host = host
         return
 
     @classmethod
@@ -24,7 +26,7 @@ class InfinispanSearcher(BaseSearcher):
         # TODO: raise NotImplementedError for not implemented metrics
         query_str_tpl = "select id, score(v) from vectors v where v.vector <-> %s~%d"
         query_str = query_str_tpl % (json.dumps(vector), top)
-        req_str = infinispan_base_url + "/caches/items?action=search&local=False"
+        req_str = infinispan_base_url(cls.host) + "/caches/items?action=search&local=False"
         data = {"query": query_str, "max_results": top}
         data_json = json.dumps(data)
         query_res = requests.post(url=req_str, data=data_json,
