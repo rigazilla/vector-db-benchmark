@@ -33,8 +33,8 @@ class InfinispanConfigurator(BaseConfigurator):
         infinispan_schema_proto = (infinispan_schema_proto_tpl
                                    % (dataset.config.vector_size,
                                      self.DISTANCE_MAPPING[dataset.config.distance],
-                                     collection_params['hnsw_config']['m'],
-                                     collection_params['hnsw_config']['ef_construction']))
+                                     collection_params["index_options"]['m'],
+                                     collection_params["index_options"]['ef_construction']))
         response = requests.post(req_str, infinispan_schema_proto,
                                  headers={"Content-Type": "application/json"},
                                  timeout=infinispan_timeout,
