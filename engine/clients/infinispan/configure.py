@@ -17,9 +17,7 @@ class InfinispanConfigurator(BaseConfigurator):
         super().__init__(host, collection_params, connection_params)
 
     def clean(self):
-        print (self.host)
         base_url = infinispan_base_url(self.host)
-        print (base_url)
         req_str = base_url + "/caches/items"
         base_url = infinispan_base_url(self.host)
         response = requests.delete(req_str, timeout=infinispan_timeout)
