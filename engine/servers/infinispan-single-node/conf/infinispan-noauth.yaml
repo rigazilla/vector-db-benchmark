@@ -1,0 +1,23 @@
+infinispan:
+  cache-container: 
+    name: default
+    transport: 
+      cluster: cluster 
+      stack: tcp 
+  server:
+    interfaces:
+      interface:
+        name: public
+        inet-address:
+          value: 0.0.0.0 
+    socket-bindings:
+      default-interface: public
+      port-offset: 0        
+      socket-binding:
+        name: default
+        port: 11222
+    endpoints:
+      endpoint:
+        socket-binding: default
+        rest-connector:
+

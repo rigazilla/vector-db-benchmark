@@ -12,6 +12,11 @@ from engine.clients.elasticsearch import (
     ElasticSearcher,
     ElasticUploader,
 )
+from engine.clients.infinispan import (
+    InfinispanConfigurator,
+    InfinispanSearcher,
+    InfinispanUploader,
+)
 from engine.clients.milvus import MilvusConfigurator, MilvusSearcher, MilvusUploader
 from engine.clients.opensearch import (
     OpenSearchConfigurator,
@@ -36,6 +41,7 @@ ENGINE_CONFIGURATORS = {
     "weaviate": WeaviateConfigurator,
     "milvus": MilvusConfigurator,
     "elasticsearch": ElasticConfigurator,
+    "infinispan": InfinispanConfigurator,
     "opensearch": OpenSearchConfigurator,
     "redis": RedisConfigurator,
     "pgvector": PgVectorConfigurator,
@@ -46,6 +52,7 @@ ENGINE_UPLOADERS = {
     "weaviate": WeaviateUploader,
     "milvus": MilvusUploader,
     "elasticsearch": ElasticUploader,
+    "infinispan": InfinispanUploader,
     "opensearch": OpenSearchUploader,
     "redis": RedisUploader,
     "pgvector": PgVectorUploader,
@@ -56,6 +63,7 @@ ENGINE_SEARCHERS = {
     "weaviate": WeaviateSearcher,
     "milvus": MilvusSearcher,
     "elasticsearch": ElasticSearcher,
+    "infinispan": InfinispanSearcher,
     "opensearch": OpenSearchSearcher,
     "redis": RedisSearcher,
     "pgvector": PgVectorSearcher,
