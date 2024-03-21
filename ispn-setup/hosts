@@ -1,0 +1,3 @@
+ISPN_SERVER=kvm-02-guest18.lab.eng.rdu2.redhat.com
+ISPN_CLIENT=kvm-02-guest25.lab.eng.rdu2.redhat.com
+

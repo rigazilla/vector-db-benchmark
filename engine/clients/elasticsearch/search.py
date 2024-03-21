@@ -57,7 +57,7 @@ class ElasticSearcher(BaseSearcher):
         meta_conditions = cls.parser.parse(meta_conditions)
         if meta_conditions:
             knn["filter"] = meta_conditions
-
+        knn.pop("parallel")
         res = cls.client.search(
             index=ELASTIC_INDEX,
             knn=knn,
