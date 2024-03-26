@@ -25,7 +25,6 @@ class InfinispanUploader(BaseUploader):
             cls, ids: List[int], vectors: List[list], metadata: Optional[List[dict]]
     ):
 
-        # Copy is faster than insert
         req_str_tpl = infinispan_base_url(cls.host) + "/caches/items/%d"
         for i, embedding in zip(ids, vectors):
             data = {"_type": "vectors", "vector": embedding, "id": i}
@@ -47,6 +46,16 @@ class InfinispanUploader(BaseUploader):
                 print("%d: Failure server side, retrying..." % threading.get_native_id())
                 repeat += 1
                 continue
+
+    @classmethod
+    def post_upload(cls, distance):
+        req_str = infinispan_base_url(cls.host) + "/caches/items/search/indexes?action=reindex"
+        response = requests.post(req_str,
+                                 timeout=infinispan_timeout*1000
+                                 )
+        print(response)
+        return {}
+
     @classmethod
     def delete_client(cls):
         return
