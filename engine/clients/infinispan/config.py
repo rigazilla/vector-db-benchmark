@@ -38,7 +38,7 @@ infinispan_local_cache_config = (
 "enabled": true,
 "storage": "filesystem",
 "startup-mode": "AUTO",
-"indexing-mode": "AUTO",
+"indexing-mode": "MANUAL",
 "indexed-entities": [ "vectors" ]
     }
   }
