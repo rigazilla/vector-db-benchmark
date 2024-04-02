@@ -2,12 +2,11 @@ import json
 import threading
 from typing import List, Optional
 
-import numpy as np
-import requests
+import httpx
 
 from engine.base_client.upload import BaseUploader
 from engine.clients.infinispan.config import *
-
+import zlib
 
 class InfinispanUploader(BaseUploader):
     conn = None
@@ -18,6 +17,7 @@ class InfinispanUploader(BaseUploader):
     @classmethod
     def init_client(cls, host, distance, connection_params, upload_params):
         cls.host = host
+        cls.h2c = httpx.Client(http2=True, http1=False)
         return
 
     @classmethod
@@ -32,14 +32,20 @@ class InfinispanUploader(BaseUploader):
             repeat = 0
             while True:
                 try:
-                    response = requests.put(req_str_tpl % i,
+                    #compress = zlib.compressobj(wbits=16 + zlib.MAX_WBITS)
+                    #body = zlib.compress(data_str.encode())
+                    response = cls.h2c.put(req_str_tpl % i,
                                             data=data_str,
-                                            headers={"Content-Type": "application/json"},
+                                            headers={
+                                                "Content-Type": "application/json",
+                                                #"Content-Encoding": "gzip"
+                                            },
                                             timeout=infinispan_timeout,
                                             )
-                    if response.ok:
+                    if response.status_code != httpx.codes.OK:
                         break
-                except:
+                except Exception as ex:
+                    print(ex)
                     pass
                 if repeat >= 10:
                     raise Exception("too many failures, giving up")
@@ -50,7 +56,7 @@ class InfinispanUploader(BaseUploader):
     @classmethod
     def post_upload(cls, distance):
         req_str = infinispan_base_url(cls.host) + "/caches/items/search/indexes?action=reindex"
-        response = requests.post(req_str,
+        response = cls.h2c.post(req_str,
                                  timeout=infinispan_timeout*1000
                                  )
         print(response)
@@ -58,4 +64,5 @@ class InfinispanUploader(BaseUploader):
 
     @classmethod
     def delete_client(cls):
+        cls.h2c.close()
         return
