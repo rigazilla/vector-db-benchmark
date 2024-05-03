@@ -50,5 +50,7 @@ class InfinispanSearcher(BaseSearcher):
 
     @classmethod
     def delete_client(cls):
-        cls.h2c.close()
-        return
+        try:
+            cls.h2c.close()
+        except:
+            return

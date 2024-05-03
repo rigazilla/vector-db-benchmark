@@ -64,5 +64,8 @@ class InfinispanUploader(BaseUploader):
 
     @classmethod
     def delete_client(cls):
-        cls.h2c.close()
+        try:
+            cls.h2c.close()
+        except:
+            return
         return
